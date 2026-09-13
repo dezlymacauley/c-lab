@@ -5,7 +5,7 @@
 
 #______________________________________________________________________________
 
-# STEP: 1 => Create a name for the binary
+# STEP: 1 => Create a name for the specific binary that should be built
 
 if [ -z "$1" ]; then
     printf "\n%s\n" '❌ Error:'
