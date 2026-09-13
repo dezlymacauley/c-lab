@@ -243,7 +243,7 @@ Add this to the `.mise-tasks/clean.bash` file
 ```bash
 #!/usr/bin/env bash
 
-#MISE description="🧼 Delete the 'build' directory"
+#MISE description="🧼 Delete the 'build' directory | alias clean"
 #MISE quiet=true
 
 if [ ! -d build ]; then
@@ -307,6 +307,7 @@ Add this to the end of the `mise.toml` file
 ```toml
 [shell_alias]
 build = "mise build-file"
+clean = "mise clean"
 run = "mise run-bin"
 ```
 _______________________________________________________________________________
@@ -321,6 +322,7 @@ ninja = "latest"
 
 [shell_alias]
 build = "mise build-file"
+clean = "mise clean"
 run = "mise run-bin"
 ```
 _______________________________________________________________________________
@@ -335,7 +337,7 @@ You should get an output like this
 Name        Description
 build-all   👷 Build all programs in the workspace
 build-file  👷 Build a specific .c file | alias = build
-clean       🧼 Delete the 'build' directory
+clean       🧼 Delete the 'build' directory | alias = clean
 run-bin     🤖 Run the binary of a .c file | alias = run
 ```
 _______________________________________________________________________________
