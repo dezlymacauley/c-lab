@@ -44,6 +44,7 @@ touch programs/d02-topic-two/f01_charlie.c
 touch programs/d02-topic-two/f02_delta.c
 
 mkdir .mise-tasks 
+touch .mise-tasks/build-all.bash 
 touch .mise-tasks/build-file.bash 
 touch .mise-tasks/clean.bash 
 touch .mise-tasks/run-bin.bash 
@@ -53,7 +54,7 @@ _______________________________________________________________________________
 
 Add this to the `programs/d01-topic-one/f01_alpha.c` file
 ```c
-#include 
+#include <stdio.h>
 
 int main(void) {
     printf("\nThis is f01_alpha.c\n\n");
@@ -64,7 +65,7 @@ _______________________________________________________________________________
 
 Add this to the `programs/d01-topic-one/f02_bravo.c` file
 ```c
-#include 
+#include <stdio.h>
 
 int main(void) {
     printf("\nThis is f02_bravo.c\n\n");
@@ -75,7 +76,7 @@ _______________________________________________________________________________
 
 Add this to the `programs/d02-topic-two/f01_charlie.c` file
 ```c
-#include 
+#include <stdio.h>
 
 int main(void) {
     printf("\nThis is f01_charlie.c\n\n");
@@ -86,7 +87,7 @@ _______________________________________________________________________________
 
 Add this to the `programs/d02-topic-two/f02_delta.c` file
 ```c
-#include 
+#include <stdio.h>
 
 int main(void) {
     printf("\nThis is f02_delta.c\n\n");
@@ -261,8 +262,8 @@ You should get an output like this
 ```
 Name        Description
 build-all   👷 Build all programs in the workspace
-build-file  👷 Build a specific .cpp file | alias = build
+build-file  👷 Build a specific .c file | alias = build
 clean       🧼 Delete the 'build' directory
-run-bin     🤖 Run the binary of a .cpp file | alias = run
+run-bin     🤖 Run the binary of a .c file | alias = run
 ```
 _______________________________________________________________________________
