@@ -1,0 +1,268 @@
+# C Single-File Program Workspace Setup Guide
+_______________________________________________________________________________
+
+### Create the project directory and enter it
+_______________________________________________________________________________
+
+```bash
+mkdir c-single-file-program-workspace
+cd c-single-file-program-workspace
+```
+_______________________________________________________________________________
+
+Use `mise` to the set the project to use the latest version 
+of `clang`, `clang-format`, `cmake`, and `ninja`
+```bash
+mise use clang@latest
+mise use cmake@latest
+mise use clang-format@latest
+mise use ninja@latest
+```
+
+Note:
+- `clang` a collection of tools for C and C++ project. 
+It includes the `clang++` toolchaing that includes `clang++` C++ compiler
+- `clang-format` is a formatter for C and C++ projects.
+- `cmake` generates build instructions using a `CMakeLists.txt` file
+- `ninja` executes the build instructions that CMake generated 
+_______________________________________________________________________________
+
+### Create the project structure
+
+```bash
+touch .gitignore
+touch CMakeLists.txt
+
+mkdir programs
+
+mkdir programs/d01-topic-one
+touch programs/d01-topic-one/f01_alpha.c
+touch programs/d01-topic-one/f02_bravo.c
+
+mkdir programs/d02-topic-two
+touch programs/d02-topic-two/f01_charlie.c
+touch programs/d02-topic-two/f02_delta.c
+
+mkdir .mise-tasks 
+touch .mise-tasks/build-file.bash 
+touch .mise-tasks/clean.bash 
+touch .mise-tasks/run-bin.bash 
+chmod u+x .mise-tasks/*.bash
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d01-topic-one/f01_alpha.c` file
+```c
+#include 
+
+int main(void) {
+    printf("\nThis is f01_alpha.c\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d01-topic-one/f02_bravo.c` file
+```c
+#include 
+
+int main(void) {
+    printf("\nThis is f02_bravo.c\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d02-topic-two/f01_charlie.c` file
+```c
+#include 
+
+int main(void) {
+    printf("\nThis is f01_charlie.c\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d02-topic-two/f02_delta.c` file
+```c
+#include 
+
+int main(void) {
+    printf("\nThis is f02_delta.c\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `.gitignore` file
+```bash
+# Build Output
+/build/
+```
+_______________________________________________________________________________
+
+Add this to the `CMakeLists.txt` file
+```cmake
+cmake_minimum_required(VERSION 3.20)
+
+project(c-single-file-workspace LANGUAGES C)
+
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# Find all .c files recursively inside the programs directory
+file(GLOB_RECURSE PROGRAM_SOURCES CONFIGURE_DEPENDS "programs/*.c")
+
+foreach(SOURCE_FILE ${PROGRAM_SOURCES})
+    # Extract filename without extension (e.g., f01_alpha)
+    get_filename_component(TARGET_NAME ${SOURCE_FILE} NAME_WE)
+    
+    # Register each source file as its own standalone executable target
+    add_executable(\({TARGET_NAME}\){SOURCE_FILE})
+endforeach()
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/build-all.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="👷 Build all programs in the workspace"
+#MISE quiet=true
+
+if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to generate build instructions:'
+    printf "%s\n" "$build_instruction_error_message"
+    exit 1
+fi
+
+if ! build_output_error_messages=$(cmake --build build 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to build project'
+    printf "%s\n" "$build_output_error_messages"
+    exit 1
+fi
+
+printf "\n%s\n\n" '✅ All programs in the workspace have been built'
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/build-file.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="👷 Build a specific .c file | alias = build"
+#MISE quiet=true
+
+if [ -z "$1" ]; then
+    printf "\n%s\n" '❌ Error:'
+    printf "%s\n\n" 'You did not specify which .c file to build'
+    printf "%s\n" 'Usage:'
+    printf "%s\n\n" 'mise build f01_alpha.c'
+    exit 1
+fi
+
+BINARY_NAME=$(basename "$1" .c)
+
+if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to generate build instructions:'
+    printf "%s\n" "$build_instruction_error_message"
+    exit 1
+fi
+
+if ! build_output_error_messages=\((cmake --build build --target "\)BINARY_NAME" 2>&1); then
+    printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
+    printf "%s\n" "$build_output_error_messages"
+    exit 1
+fi
+
+printf "\n%s\n\n" "✅ $BINARY_NAME has been built"
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/clean.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="🧼 Delete the 'build' directory"
+#MISE quiet=true
+
+if [ ! -d build ]; then
+    printf "\n%s\n\n" '✅ No build directory found'
+    exit 0
+fi
+
+rm -rf build
+printf "\n%s\n\n" '✅ The build directory has been deleted'
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/run-bin.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="🤖 Run the binary of a .c file | alias = run"
+#MISE quiet=true
+
+if [ -z "$1" ]; then
+    printf "\n%s\n" '❌ Error:'
+    printf "%s\n\n" 'You did not specify which .c file to run'
+    printf "%s\n" 'Usage:'
+    printf "%s\n\n" 'mise run f01_alpha.c'
+    exit 1
+fi
+
+BINARY_NAME=$(basename "$1" .c)
+
+if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to generate build instructions:'
+    printf "%s\n" "$build_instruction_error_message"
+    exit 1
+fi
+
+if ! build_output_error_messages=\((cmake --build build --target "\)BINARY_NAME" 2>&1); then
+    printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
+    printf "%s\n" "$build_output_error_messages"
+    exit 1
+fi
+
+./build/"$BINARY_NAME"
+```
+_______________________________________________________________________________
+
+Add this to the end of the `mise.toml` file
+```toml
+[shell_alias]
+build = "mise build-file"
+run = "mise run-bin"
+```
+_______________________________________________________________________________
+
+The full `mise.toml` file should look like this:
+```toml
+[tools]
+clang = "latest"
+clang-format = "latest"
+cmake = "latest"
+ninja = "latest"
+
+[shell_alias]
+build = "mise build-file"
+run = "mise run-bin"
+```
+_______________________________________________________________________________
+
+### To view a list of `mise tasks`, run this command
+```bash
+mise tasks
+```
+
+You should get an output like this
+```
+Name        Description
+build-all   👷 Build all programs in the workspace
+build-file  👷 Build a specific .cpp file | alias = build
+clean       🧼 Delete the 'build' directory
+run-bin     🤖 Run the binary of a .cpp file | alias = run
+```
+_______________________________________________________________________________
