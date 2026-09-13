@@ -21,19 +21,18 @@ BINARY_NAME=$(basename "$1" .c)
 # STEP: 2 => Generate the build instructions if they have not been generated
 
 if [ ! -d "build" ]; then
-    if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
-        printf "\n%s\n\n" '❌ Failed to generate build instructions:'
-        printf "%s\n" "$build_instruction_error_message"
+    if ! cmake -B build -G Ninja &> /dev/null; then
+        printf "\n%s\n\n" '❌ Failed to generate build instructions'
         exit 1
     fi
 fi
+
 #______________________________________________________________________________
 
 # STEP: 3 => Build the specific file
 
-if ! build_output_error_messages=$(cmake --build build --target "$BINARY_NAME" 2>&1); then
+if ! cmake --build build --target "$BINARY_NAME" &> /dev/null; then
     printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
-    printf "%s\n" "$build_output_error_messages"
     exit 1
 fi
 #______________________________________________________________________________
