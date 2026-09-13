@@ -105,10 +105,11 @@ _______________________________________________________________________________
 
 Add this to the `CMakeLists.txt` file
 ```cmake
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.4.3)
 
 project(c-single-file-workspace LANGUAGES C)
 
+# https://www.c-language.org/
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
@@ -120,7 +121,7 @@ foreach(SOURCE_FILE ${PROGRAM_SOURCES})
     get_filename_component(TARGET_NAME ${SOURCE_FILE} NAME_WE)
     
     # Register each source file as its own standalone executable target
-    add_executable(\({TARGET_NAME}\){SOURCE_FILE})
+    add_executable(${TARGET_NAME} ${SOURCE_FILE})
 endforeach()
 ```
 _______________________________________________________________________________
@@ -132,17 +133,27 @@ Add this to the `.mise-tasks/build-all.bash` file
 #MISE description="👷 Build all programs in the workspace"
 #MISE quiet=true
 
+#______________________________________________________________________________
+
+# STEP: 1 => Generate the build instructions
+
 if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
     printf "\n%s\n\n" '❌ Failed to generate build instructions:'
     printf "%s\n" "$build_instruction_error_message"
     exit 1
 fi
 
+#______________________________________________________________________________
+
+# STEP: 2 => Build the project
+
 if ! build_output_error_messages=$(cmake --build build 2>&1); then
     printf "\n%s\n\n" '❌ Failed to build project'
     printf "%s\n" "$build_output_error_messages"
     exit 1
 fi
+
+#______________________________________________________________________________
 
 printf "\n%s\n\n" '✅ All programs in the workspace have been built'
 ```
@@ -155,27 +166,38 @@ Add this to the `.mise-tasks/build-file.bash` file
 #MISE description="👷 Build a specific .c file | alias = build"
 #MISE quiet=true
 
+#______________________________________________________________________________
+
+# STEP: 1 => Create a name for the binary
+
 if [ -z "$1" ]; then
     printf "\n%s\n" '❌ Error:'
     printf "%s\n\n" 'You did not specify which .c file to build'
     printf "%s\n" 'Usage:'
-    printf "%s\n\n" 'mise build f01_alpha.c'
+    printf "%s\n\n" 'mise build-file f01_alpha.c'
     exit 1
 fi
 
-BINARY_NAME=$(basename "$1" .c)
+BINARY_NAME=$(basename "$1" .cpp)
+#______________________________________________________________________________
+
+# STEP: 2 => Generate the build instructions
 
 if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
     printf "\n%s\n\n" '❌ Failed to generate build instructions:'
     printf "%s\n" "$build_instruction_error_message"
     exit 1
 fi
+#______________________________________________________________________________
 
-if ! build_output_error_messages=\((cmake --build build --target "\)BINARY_NAME" 2>&1); then
+# STEP: 3 => Build the project
+
+if ! build_output_error_messages=$(cmake --build build --target "$BINARY_NAME" 2>&1); then
     printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
     printf "%s\n" "$build_output_error_messages"
     exit 1
 fi
+#______________________________________________________________________________
 
 printf "\n%s\n\n" "✅ $BINARY_NAME has been built"
 ```
@@ -205,29 +227,43 @@ Add this to the `.mise-tasks/run-bin.bash` file
 #MISE description="🤖 Run the binary of a .c file | alias = run"
 #MISE quiet=true
 
+#______________________________________________________________________________
+
+# STEP: 1 => Create a name for the binary
+
 if [ -z "$1" ]; then
     printf "\n%s\n" '❌ Error:'
-    printf "%s\n\n" 'You did not specify which .c file to run'
+    printf "%s\n\n" 'You did not specify which .c file to build'
     printf "%s\n" 'Usage:'
-    printf "%s\n\n" 'mise run f01_alpha.c'
+    printf "%s\n\n" 'mise run-bin f01_alpha.c'
     exit 1
 fi
 
-BINARY_NAME=$(basename "$1" .c)
+BINARY_NAME=$(basename "$1" .cpp)
+#______________________________________________________________________________
+
+# STEP: 2 => Generate the build instructions
 
 if ! build_instruction_error_message=$(cmake -B build -G Ninja 2>&1); then
     printf "\n%s\n\n" '❌ Failed to generate build instructions:'
     printf "%s\n" "$build_instruction_error_message"
     exit 1
 fi
+#______________________________________________________________________________
 
-if ! build_output_error_messages=\((cmake --build build --target "\)BINARY_NAME" 2>&1); then
+# STEP: 3 => Build the project
+
+if ! build_output_error_messages=$(cmake --build build --target "$BINARY_NAME" 2>&1); then
     printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
     printf "%s\n" "$build_output_error_messages"
     exit 1
 fi
+#______________________________________________________________________________
+
+# STEP: 4 => Run the project
 
 ./build/"$BINARY_NAME"
+#______________________________________________________________________________
 ```
 _______________________________________________________________________________
 

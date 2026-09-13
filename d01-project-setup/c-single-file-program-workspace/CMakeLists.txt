@@ -1,7 +1,8 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.4.3)
 
 project(c-single-file-workspace LANGUAGES C)
 
+# https://www.c-language.org/
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
@@ -13,5 +14,5 @@ foreach(SOURCE_FILE ${PROGRAM_SOURCES})
     get_filename_component(TARGET_NAME ${SOURCE_FILE} NAME_WE)
     
     # Register each source file as its own standalone executable target
-    add_executable(\({TARGET_NAME}\){SOURCE_FILE})
+    add_executable(${TARGET_NAME} ${SOURCE_FILE})
 endforeach()
