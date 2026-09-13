@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-BINARY_NAME=$(basename "$1" .cpp)
+BINARY_NAME=$(basename "$1" .c)
 #______________________________________________________________________________
 
 # STEP: 2 => Generate the build instructions
