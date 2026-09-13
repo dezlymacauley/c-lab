@@ -276,7 +276,7 @@ fi
 
 # STEP: 3 => Build the specific file
 
-if ! build_output_error_messages=\((cmake --build build --target "\)BINARY_NAME" 2>&1); then
+if ! build_output_error_messages=$(cmake --build build --target "$BINARY_NAME" 2>&1); then
     printf "\n%s\n\n" "❌ Failed to build target: $BINARY_NAME"
     printf "%s\n" "$build_output_error_messages"
     exit 1
