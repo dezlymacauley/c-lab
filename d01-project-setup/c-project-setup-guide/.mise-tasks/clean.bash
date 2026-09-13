@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-#MISE description="🧼 Delete the 'build' directory"
+#MISE description="🧼 Delete the 'build' directory | alias = clean"
 #MISE quiet=true
 
 if [ ! -d build ]; then
