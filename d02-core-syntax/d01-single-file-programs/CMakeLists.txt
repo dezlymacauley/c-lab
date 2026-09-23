@@ -34,7 +34,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # SECTION: Declaring what internal files should be compiled
 
-# This line is used to create a list of all the `.cpp` files in the project
+# This line is used to create a list of all the `.c` files in the project
 # that should be built, and then store 
 # that list as a variable that I have chosen to call `PROGRAMS_DIRECTORY`.
 
