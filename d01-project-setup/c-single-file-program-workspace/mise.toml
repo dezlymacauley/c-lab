@@ -48,7 +48,7 @@ eza = "latest"
 
 [env]
 
-PROJECT_NAME = "d01-single-file-programs"
+PROJECT_NAME = "c-project"
 BUILD_GENERATOR = "Ninja"
 C_COMPILER = "clang"
 
