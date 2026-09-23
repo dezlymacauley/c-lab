@@ -42,7 +42,7 @@ clang-format = "latest"
     uvx_args = "--with pygls<2" 
 }
 
-# Displays a tree structure of the project diagram
+# Displays the project structure as a tree diagram
 eza = "latest"
 
 #______________________________________________________________________________
@@ -50,9 +50,13 @@ eza = "latest"
 [env]
 
 PROJECT_NAME = "c-project"
-GENERATOR = "Ninja"
+BUILD_GENERATOR = "Ninja"
 C_COMPILER = "clang"
+
+# Use this site to see a list of valid C standards
+# https://www.c-language.org/
 C_STANDARD = "23"
+
 BUILD_DIR = "build"
 BINARY_NAME = "c-project"
 
@@ -61,7 +65,7 @@ BINARY_NAME = "c-project"
 # bash -c "$CMAKE_GBI_CMD"
 CMAKE_GBI_CMD = """
 cmake \
-    -G {{env.GENERATOR}} \
+    -G {{env.BUILD_GENERATOR}} \
     -DCMAKE_C_COMPILER={{env.C_COMPILER}} \
     -B {{env.BUILD_DIR}}
 """

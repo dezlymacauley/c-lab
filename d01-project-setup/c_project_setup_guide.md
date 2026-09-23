@@ -3,7 +3,7 @@ _______________________________________________________________________________
 
 Create the project directory and enter it
 ```bash
-mkdir c-project-setup-guide && cd c-project-setup-guide
+mkdir c-project && cd c-project
 ```
 _______________________________________________________________________________
 
@@ -59,14 +59,21 @@ clang-format = "latest"
     uvx_args = "--with pygls<2" 
 }
 
+# Displays the project structure as a tree diagram
+eza = "latest"
+
 #______________________________________________________________________________
 
 [env]
 
 PROJECT_NAME = "c-project"
-GENERATOR = "Ninja"
+BUILD_GENERATOR = "Ninja"
 C_COMPILER = "clang"
+
+# Use this site to see a list of valid C standards
+# https://www.c-language.org/
 C_STANDARD = "23"
+
 BUILD_DIR = "build"
 BINARY_NAME = "c-project"
 
@@ -75,7 +82,7 @@ BINARY_NAME = "c-project"
 # bash -c "$CMAKE_GBI_CMD"
 CMAKE_GBI_CMD = """
 cmake \
-    -G {{env.GENERATOR}} \
+    -G {{env.BUILD_GENERATOR}} \
     -DCMAKE_C_COMPILER={{env.C_COMPILER}} \
     -B {{env.BUILD_DIR}}
 """
@@ -119,9 +126,10 @@ mkdir src
 touch src/main.c
 
 mkdir .mise-tasks 
-touch .mise-tasks/build-all.bash 
+touch .mise-tasks/build.bash 
 touch .mise-tasks/clean.bash 
 touch .mise-tasks/runbin.bash 
+touch .mise-tasks/structure.bash 
 chmod u+x .mise-tasks/*.bash
 ```
 _______________________________________________________________________________
@@ -147,17 +155,6 @@ IndentWidth: 4
 
 # Number of characters per line
 ColumnLimit: 80
-```
-_______________________________________________________________________________
-
-Add this to the `src/main.c` file
-```c
-#include <stdio.h>
-
-int main(void) {
-    printf("\nC Project\n\n");
-    return 0;
-}
 ```
 _______________________________________________________________________________
 
@@ -216,7 +213,7 @@ add_executable($ENV{BINARY_NAME} src/main.c)
 ```
 _______________________________________________________________________________
 
-### Add this to the `.mise-tasks/build.bash` file
+Add this to the `.mise-tasks/build.bash` file
 ```bash
 #!/usr/bin/env bash
 
@@ -334,16 +331,33 @@ Add this to the `.mise-tasks/structure.bash` file
 #MISE description="🌲 View project structure as a tree diagram | alias = structure"
 #MISE quiet=true
 
-eza --tree --git-ignore
+eza --tree --all --git-ignore
 #______________________________________________________________________________
 ```
 _______________________________________________________________________________
 
-To view a list of `mise tasks`, run this command
+Add this to the `src/main.c` file
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("\nC Project\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+To view a list of `mise tasks`, 
+run this command:
+```bash
+mise tasks
+```
+
+You should see this
 ```bash
 Name       Description
 build      👷 Build the project | alias = build
-clean      🧼 Delete the 'build' directory | alias = clean
+clean      🧼 Delete build and cache files | alias = clean
 runbin     🤖 Run the binary of the project | alias = run
 structure  🌲 View project structure as a tree diagram | alias = structure
 ```

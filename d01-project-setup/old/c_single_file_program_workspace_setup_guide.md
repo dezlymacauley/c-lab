@@ -5,8 +5,8 @@ _______________________________________________________________________________
 _______________________________________________________________________________
 
 ```bash
-mkdir cpp-single-file-program-workspace
-cd cpp-single-file-program-workspace
+mkdir c-single-file-program-workspace
+cd c-single-file-program-workspace
 ```
 _______________________________________________________________________________
 
@@ -36,12 +36,12 @@ touch CMakeLists.txt
 mkdir programs
 
 mkdir programs/d01-topic-one
-touch programs/d01-topic-one/f01_alpha.cpp
-touch programs/d01-topic-one/f02_bravo.cpp
+touch programs/d01-topic-one/f01_alpha.c
+touch programs/d01-topic-one/f02_bravo.c
 
 mkdir programs/d02-topic-two
-touch programs/d02-topic-two/f01_charlie.cpp
-touch programs/d02-topic-two/f02_delta.cpp
+touch programs/d02-topic-two/f01_charlie.c
+touch programs/d02-topic-two/f02_delta.c
 
 mkdir .mise-tasks 
 touch .mise-tasks/build-all.bash 
@@ -52,45 +52,45 @@ chmod u+x .mise-tasks/*.bash
 ```
 _______________________________________________________________________________
 
-Add this to the `programs/d01-topic-one/f01_alpha.cpp` file
-```cpp
-#include <iostream>
+Add this to the `programs/d01-topic-one/f01_alpha.c` file
+```c
+#include <stdio.h>
 
-int main() {
-    std::cout << "\nThis is f01_alpha.cpp\n\n";
+int main(void) {
+    printf("\nThis is f01_alpha.c\n\n");
     return 0;
 }
 ```
 _______________________________________________________________________________
 
-Add this to the `programs/d01-topic-one/f02_bravo.cpp` file
-```cpp
-#include <iostream>
+Add this to the `programs/d01-topic-one/f02_bravo.c` file
+```c
+#include <stdio.h>
 
-int main() {
-    std::cout << "\nThis is f02_bravo.cpp\n\n";
+int main(void) {
+    printf("\nThis is f02_bravo.c\n\n");
     return 0;
 }
 ```
 _______________________________________________________________________________
 
-Add this to the `programs/d02-topic-two/f01_charlie.cpp` file
-```cpp
-#include <iostream>
+Add this to the `programs/d02-topic-two/f01_charlie.c` file
+```c
+#include <stdio.h>
 
-int main() {
-    std::cout << "\nThis is f01_charlie.cpp\n\n";
+int main(void) {
+    printf("\nThis is f01_charlie.c\n\n");
     return 0;
 }
 ```
 _______________________________________________________________________________
 
-Add this to the `programs/d02-topic-two/f02_delta.cpp` file
-```cpp
-#include <iostream>
+Add this to the `programs/d02-topic-two/f02_delta.c` file
+```c
+#include <stdio.h>
 
-int main() {
-    std::cout << "\nThis is f02_delta.cpp\n\n";
+int main(void) {
+    printf("\nThis is f02_delta.c\n\n");
     return 0;
 }
 ```
@@ -112,49 +112,49 @@ Add this to the `CMakeLists.txt` file
 cmake_minimum_required(VERSION 4.4.3)
 
 # Sets the project name and lets CMake know that this project 
-# only uses C++ code. 
-project(cpp-single-file-workspace LANGUAGES CXX)
+# only uses C code. 
+project(c-single-file-workspace LANGUAGES C)
 
-# This line is used to create a list of all the `.cpp` files in the project
+# This line is used to create a list of all the `.c` files in the project
 # that should be built, and then store 
 # that list as a variable that I have chosen to call `PROGRAMS_DIRECTORY`.
 
-# `GLOB_RECURSE` and `"programs/*.cpp"` tell CMake 
-# to search for all `.cpp` files inside the "programs" directory,
-# including any sub-directories that contain `.cpp` files.
+# `GLOB_RECURSE` and `"programs/*.c"` tell CMake 
+# to search for all `.c` files inside the "programs" directory,
+# including any sub-directories that contain `.c` files.
 
 # `CONFIGURE_DEPENDS` tells CMake to check the file system of the project 
 # for changes before building the project. So if you add, delete, or rename,
 # things inside the `programs` directory,
 # CMake will ensure that the variable `PROGRAMS_DIRECTORY` is updated.
-file(GLOB_RECURSE PROGRAMS_DIRECTORY CONFIGURE_DEPENDS "programs/*.cpp")
+file(GLOB_RECURSE PROGRAMS_DIRECTORY CONFIGURE_DEPENDS "programs/*.c")
 
 # This is a `foreach` loop in CMake.
-# It allows CMAKE to to perform a set of actions for each `.cpp` file in the
+# It allows CMAKE to to perform a set of actions for each `.c` file in the
 # the `programs` directory.
-foreach(CPP_FILE ${PROGRAMS_DIRECTORY})
+foreach(C_FILE ${PROGRAMS_DIRECTORY})
 
-    # A `.cpp` file is built, a binary executable is created.
+    # A `.c` file is built, a binary executable is created.
     # The line below allows you to set the name of the binary executable
     # in advance, and store it in a variable called `BINARY_NAME`.
-    # `${CPP_FILE} NAME_WE` means that the `BINARY_NAME` is equal to the C++ file
+    # `${C_FILE} NAME_WE` means that the `BINARY_NAME` is equal to the C file
     # without the extension.
-    # So if CPP_FILE = f01_alpha.cpp, and BINARY_NAME = f01_alpha
-    get_filename_component(BINARY_NAME ${CPP_FILE} NAME_WE)
+    # So if C_FILE = f01_alpha.c, and BINARY_NAME = f01_alpha
+    get_filename_component(BINARY_NAME ${C_FILE} NAME_WE)
 
-    # This is where you list what should be built and from which `.cpp` file
-    # E.g. Build `f01_alpha` from `f01_alpha.cpp`
-    add_executable(${BINARY_NAME} ${CPP_FILE})
+    # This is where you list what should be built and from which `.c` file
+    # E.g. Build `f01_alpha` from `f01_alpha.c`
+    add_executable(${BINARY_NAME} ${C_FILE})
     
     # This is where you specify build settings.
-    # `PRIVATE cxx_std_17` tells CMake what C++ standard should 
+    # `PRIVATE c_std_17` tells CMake what C standard should 
     # be used to build this specific binary.
 
-    # You can use the website below to view a list a valid C++ standards.
+    # You can use the website below to view a list a valid C standards.
     # I recommend using the second latest one unless you need a feature 
     # from the latest one:
-    # https://www.cplusplus-language.org/
-    target_compile_features(${BINARY_NAME} PRIVATE cxx_std_17)
+    # https://www.c-language.org/
+    target_compile_features(${BINARY_NAME} PRIVATE c_std_17)
 
 endforeach()
 ```
@@ -199,7 +199,7 @@ Add this to the `.mise-tasks/build-file.bash` file
 ```bash
 #!/usr/bin/env bash
 
-#MISE description="👷 Build a specific .cpp file | alias = build"
+#MISE description="👷 Build a specific .c file | alias = build"
 #MISE quiet=true
 
 #______________________________________________________________________________
@@ -208,13 +208,13 @@ Add this to the `.mise-tasks/build-file.bash` file
 
 if [ -z "$1" ]; then
     printf "\n%s\n" '❌ Error:'
-    printf "%s\n\n" 'You did not specify which .cpp file to build'
+    printf "%s\n\n" 'You did not specify which .c file to build'
     printf "%s\n" 'Usage:'
-    printf "%s\n\n" 'mise build-file f01_alpha.cpp'
+    printf "%s\n\n" 'mise build-file f01_alpha.c'
     exit 1
 fi
 
-BINARY_NAME=$(basename "$1" .cpp)
+BINARY_NAME=$(basename "$1" .c)
 #______________________________________________________________________________
 
 # STEP: 2 => Generate the build instructions if they have not been generated
@@ -260,7 +260,7 @@ Add this to the `.mise-tasks/run-bin.bash` file
 ```bash
 #!/usr/bin/env bash
 
-#MISE description="🤖 Run the binary of a .cpp file | alias = run"
+#MISE description="🤖 Run the binary of a .c file | alias = run"
 #MISE quiet=true
 
 #______________________________________________________________________________
@@ -269,13 +269,13 @@ Add this to the `.mise-tasks/run-bin.bash` file
 
 if [ -z "$1" ]; then
     printf "\n%s\n" '❌ Error:'
-    printf "%s\n\n" 'You did not specify which .cpp file to build'
+    printf "%s\n\n" 'You did not specify which .c file to build'
     printf "%s\n" 'Usage:'
-    printf "%s\n\n" 'mise run-bin f01_alpha.cpp'
+    printf "%s\n\n" 'mise run-bin f01_alpha.c'
     exit 1
 fi
 
-BINARY_NAME=$(basename "$1" .cpp)
+BINARY_NAME=$(basename "$1" .c)
 #______________________________________________________________________________
 
 # STEP: 2 => Generate the build instructions if they have not been generated
@@ -336,8 +336,8 @@ You should get an output like this
 ```
 Name        Description
 build-all   👷 Build all programs in the workspace
-build-file  👷 Build a specific .cpp file | alias = build
+build-file  👷 Build a specific .c file | alias = build
 clean       🧼 Delete the 'build' directory | alias = clean
-run-bin     🤖 Run the binary of a .cpp file | alias = run
+run-bin     🤖 Run the binary of a .c file | alias = run
 ```
 _______________________________________________________________________________
