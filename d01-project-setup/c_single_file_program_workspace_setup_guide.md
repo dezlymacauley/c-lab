@@ -1,107 +1,474 @@
 # C Single-File Program Workspace Setup Guide
 _______________________________________________________________________________
 
-### Create the project directory and enter it
-_______________________________________________________________________________
-
+Create the project directory and enter it
 ```bash
-mkdir cpp-single-file-program-workspace
-cd cpp-single-file-program-workspace
+mkdir c-single-file-program-workspace && cd c-single-file-program-workspace
 ```
 _______________________________________________________________________________
 
-Use `mise` to the set the project to use the latest version 
-of `clang`, `clang-format`, `cmake`, and `ninja`
+Create a `mise.toml` file and give mise permission to read it
 ```bash
-mise use clang@latest
-mise use clang-format@latest
-mise use cmake@latest
-mise use ninja@latest
+touch mise.toml && mise trust
 ```
-
-Note:
-- `clang` a collection of tools for C and C++ project. 
-It includes the `clang++` toolchaing that includes `clang++` C++ compiler
-- `clang-format` is a formatter for C and C++ projects.
-- `cmake` generates build instructions using a `CMakeLists.txt` file
-- `ninja` executes the build instructions that CMake generated 
 _______________________________________________________________________________
 
-### Create the project structure
-
+Add this to the `mise.toml` file
 ```bash
+[tools]
+
+# `cmake` is used to read `CMakeLists.txt` files,
+# and generate build instructions for a specified build generator.
+# The build generator used in this project is `ninja`.
+
+# In addition to this, `cmake` is also responsible for creating 
+# a `compile_commands.json` file. This file helps language servers 
+# like `clangd` to understand the structure of your C project,
+# and see which external dependencies you've added to the project,
+# so that you get better language support and autocompletion.
+
+# Once the build instructions have been generated,
+# `cmake` can then trigger the build generator `ninja`.
+
+# `ninja` will then use the C compiler specified to build the project and
+# create a binary executable.
+# The C compiler used in this project is `clang`
+cmake = "latest"
+
+# The build generator
+ninja = "latest"
+
+# The C compiler that will be used by build generator to build the project
+# and create an executable binary.
+clang = "latest"
+
+# A Code formatter
+clang-format = "latest"
+
+# Language support for C files
+# The `github:` prefix is used to download a pre-compiled binary from GitHub.
+"github:clangd/clangd" = "latest"
+
+# Language support for CMake files
+# The `pipx:` prefix is used to download the Python package from PyPI.
+# Despite the prefix `pipx`, it is actually using uv to download the tool.
+"pipx:cmake-language-server" = { 
+    version = "latest", 
+    # cmake-language-server is not compatible with pygls version 2,
+    # so this is required for it work.
+    uvx_args = "--with pygls<2" 
+}
+
+# Displays the project structure as a tree diagram
+eza = "latest"
+
+#______________________________________________________________________________
+
+[env]
+
+PROJECT_NAME = "c-project"
+BUILD_GENERATOR = "Ninja"
+C_COMPILER = "clang"
+
+# Use this site to see a list of valid C standards
+# https://www.c-language.org/
+C_STANDARD = "23"
+
+BUILD_DIR = "build"
+
+# # This is the command that will generate the build instructions
+# # To check if this works, run this:
+# # bash -c "$CMAKE_GBI_CMD"
+# CMAKE_GBI_CMD = """
+# cmake \
+#     -G {{env.BUILD_GENERATOR}} \
+#     -DCMAKE_C_COMPILER={{env.C_COMPILER}} \
+#     -B {{env.BUILD_DIR}}
+# """
+#
+# # This is the command that will build the project and create 
+# # a binary executable.
+# # To check if this works, run this:
+# # bash -c "$CMAKE_GBI_CMD" && bash -c "$CMAKE_BUILD_CMD"
+# CMAKE_BUILD_CMD = """
+# cmake --build {{env.BUILD_DIR}}
+# """
+#
+# # This is the command that will run the binary
+# # To check if this work, run this:
+# # bash -c "$RUN_BINARY_CMD"
+# RUN_BINARY_CMD = "./{{env.BUILD_DIR}}/{{env.BINARY_NAME}}"
+#______________________________________________________________________________
+
+[shell_alias]
+build = "mise build"
+clean = "mise clean"
+run = "mise runbin"
+structure = "mise structure"
+#______________________________________________________________________________
+```
+_______________________________________________________________________________
+
+Install the tools with mise
+```bash
+mise install
+```
+_______________________________________________________________________________
+
+Create the project structure
+```bash
+touch .clang-format
 touch .gitignore
 touch CMakeLists.txt
 
 mkdir programs
 
 mkdir programs/d01-topic-one
-touch programs/d01-topic-one/f01_alpha.cpp
-touch programs/d01-topic-one/f02_bravo.cpp
+touch programs/d01-topic-one/f01_alpha.c
+touch programs/d01-topic-one/f02_bravo.c
 
 mkdir programs/d02-topic-two
-touch programs/d02-topic-two/f01_charlie.cpp
-touch programs/d02-topic-two/f02_delta.cpp
+touch programs/d02-topic-two/f01_charlie.c
+touch programs/d02-topic-two/f02_delta.c
 
 mkdir .mise-tasks 
 touch .mise-tasks/build-all.bash 
 touch .mise-tasks/build-file.bash 
 touch .mise-tasks/clean.bash 
-touch .mise-tasks/run-bin.bash 
+touch .mise-tasks/runbin.bash 
+touch .mise-tasks/structure.bash 
 chmod u+x .mise-tasks/*.bash
 ```
 _______________________________________________________________________________
 
-Add this to the `programs/d01-topic-one/f01_alpha.cpp` file
-```cpp
-#include <iostream>
+Add this to the `.clang-format` file
+```yaml
+# ABOUT: .clang-format
 
-int main() {
-    std::cout << "\nThis is f01_alpha.cpp\n\n";
-    return 0;
-}
-```
-_______________________________________________________________________________
+# This file is used to configure the settings 
+# for the code formatter `clang-format`.
 
-Add this to the `programs/d01-topic-one/f02_bravo.cpp` file
-```cpp
-#include <iostream>
+# Use the link below to search for additional configuration options:
 
-int main() {
-    std::cout << "\nThis is f02_bravo.cpp\n\n";
-    return 0;
-}
-```
-_______________________________________________________________________________
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#______________________________________________________________________________
 
-Add this to the `programs/d02-topic-two/f01_charlie.cpp` file
-```cpp
-#include <iostream>
+# Ensure that tab characters are never used.
+# Any tab characters in the existing file will be replaced with spaces.
+UseTab: Never
 
-int main() {
-    std::cout << "\nThis is f01_charlie.cpp\n\n";
-    return 0;
-}
-```
-_______________________________________________________________________________
+# Number of spaces for indentation
+IndentWidth: 4
 
-Add this to the `programs/d02-topic-two/f02_delta.cpp` file
-```cpp
-#include <iostream>
-
-int main() {
-    std::cout << "\nThis is f02_delta.cpp\n\n";
-    return 0;
-}
+# Number of characters per line
+ColumnLimit: 80
 ```
 _______________________________________________________________________________
 
 Add this to the `.gitignore` file
 ```bash
+# Language Server Cache
+/.cache/
+
 # Build Output
 /build/
 ```
 _______________________________________________________________________________
+
+Add this to the `CMakeLists.txt` file
+```cmake
+# SECTION: Environment Variables
+
+# The following environment variables are declared in the `mise.toml` file:
+# PROJECT_NAME
+# C_STANDARD
+
+#______________________________________________________________________________
+
+# SECTION: Basic Settings
+
+# The minimum version of CMake required to create build instructions
+# in this project
+cmake_minimum_required(VERSION 4.4.3)
+
+# This sets the project name and `LANGUAGES C` is the convention to tell
+# CMake that this project uses C code.
+project($ENV{PROJECT_NAME} LANGUAGES C)
+
+# This set the C standard that should be used and ensures that the build 
+# does not fallback to any other standards
+set(CMAKE_C_STANDARD $ENV{C_STANDARD})
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# This tells CMake to generate a `compile_commands.json` file 
+# when generating build instructions for your project.
+# This `compile_commands.json` is used by `clangd`,
+# the language server for C projects.
+
+# The `compile_commands.json` file helps clangd know about the structure 
+# of your project and any external packages you have linked to the project 
+# so that it can provide you with better language support and completion.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#______________________________________________________________________________
+
+# SECTION: Declaring what internal files should be compiled
+
+# This line is used to create a list of all the `.cpp` files in the project
+# that should be built, and then store 
+# that list as a variable that I have chosen to call `PROGRAMS_DIRECTORY`.
+
+# `GLOB_RECURSE` and `"programs/*.c"` tell CMake 
+# to search for all `.c` files inside the "programs" directory,
+# including any sub-directories that contain `.c` files.
+
+# `CONFIGURE_DEPENDS` tells CMake to check the file system of the project 
+# for changes before building the project. So if you add, delete, or rename,
+# things inside the `programs` directory,
+# CMake will ensure that the variable `PROGRAMS_DIRECTORY` is updated.
+file(GLOB_RECURSE PROGRAMS_DIRECTORY CONFIGURE_DEPENDS "programs/*.c")
+
+# This is a `foreach` loop in CMake.
+# It allows CMAKE to to perform a set of actions for each `.c` file in the
+# the `programs` directory.
+foreach(C_FILE ${PROGRAMS_DIRECTORY})
+
+    # A `.c` file is built, a binary executable is created.
+    # The line below allows you to set the name of the binary executable
+    # in advance, and store it in a variable called `BINARY_NAME`.
+    # `${C_FILE} NAME_WE` means that the `BINARY_NAME` is equal to the C file
+    # without its file extension.
+    # So if C_FILE = f01_alpha.c, and BINARY_NAME = f01_alpha
+    get_filename_component(BINARY_NAME ${C_FILE} NAME_WE)
+
+    # This is where you list what should be built and from which `.c` file
+    # E.g. Build `f01_alpha` from `f01_alpha.c`
+    add_executable(${BINARY_NAME} ${C_FILE})
+
+endforeach()
+
+#______________________________________________________________________________
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/build.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="👷 Build the project | alias = build"
+#MISE quiet=true
+
+#______________________________________________________________________________
+
+# STEP: 1 => Generate the build instructions 
+
+# The first `if` block ensures that CMake will only generate 
+# build instructions if the `build` directory does not exist.
+
+if [ ! -d "build" ]; then
+
+    # This creates a clean cli output because the output messages from
+    # the `CMAKE_GBI_CMD` command will only be shown if an error occured
+    # when generating the the build instructions.
+    if ! build_instruction_error_messages=$($CMAKE_GBI_CMD 2>&1); then
+        printf "\n%s\n\n" '❌ Failed to generate build instructions:'
+        printf "%s\n" "$build_instruction_error_messages"
+        exit 1
+    fi
+
+fi
+
+#______________________________________________________________________________
+
+# STEP: 2 => Build the project
+
+# This creates a clean cli output because the output messages from
+# the `CMAKE_BUILD_CMD` command will only be shown if an error occured
+# when building the project.
+if ! build_output_error_messages=$($CMAKE_BUILD_CMD 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to build project'
+    printf "%s\n" "$build_output_error_messages"
+    exit 1
+fi
+
+#______________________________________________________________________________
+
+printf "\n%s\n\n" '✅ All programs in the workspace have been built'
+#______________________________________________________________________________
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/clean.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="🧼 Delete build and cache files | alias = clean"
+#MISE quiet=true
+
+rm -rf build
+rm -rf .cache
+
+printf "\n%s\n\n" '✅ build and cache files have been deleted'
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/runbin.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="🤖 Run the binary of the project | alias = run"
+#MISE quiet=true
+
+#______________________________________________________________________________
+
+# STEP: 1 => Generate the build instructions 
+
+# The first `if` block ensures that CMake will only generate 
+# build instructions if the `build` directory does not exist.
+
+if [ ! -d "build" ]; then
+
+    # This creates a clean cli output because the output messages from
+    # the `CMAKE_GBI_CMD` command will only be shown if an error occured
+    # when generating the the build instructions.
+    if ! build_instruction_error_messages=$($CMAKE_GBI_CMD 2>&1); then
+        printf "\n%s\n\n" '❌ Failed to generate build instructions:'
+        printf "%s\n" "$build_instruction_error_messages"
+        exit 1
+    fi
+
+fi
+
+#______________________________________________________________________________
+
+# STEP: 2 => Build the project
+
+# This creates a clean cli output because the output messages from
+# the `CMAKE_BUILD_CMD` command will only be shown if an error occured
+# when building the project.
+if ! build_output_error_messages=$($CMAKE_BUILD_CMD 2>&1); then
+    printf "\n%s\n\n" '❌ Failed to build project'
+    printf "%s\n" "$build_output_error_messages"
+    exit 1
+fi
+
+#______________________________________________________________________________
+
+# STEP: 3 => Run the binary executable 
+
+bash -c "$RUN_BINARY_CMD"
+
+#______________________________________________________________________________
+```
+_______________________________________________________________________________
+
+Add this to the `.mise-tasks/structure.bash` file
+```bash
+#!/usr/bin/env bash
+
+#MISE description="🌲 View project structure as a tree diagram | alias = structure"
+#MISE quiet=true
+
+eza --tree --all --git-ignore
+#______________________________________________________________________________
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d01-topic-one/f01_alpha.c` file
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("\nThis is f01_alpha\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d01-topic-one/f02_bravo.c` file
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("\nThis is f02_bravo\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d02-topic-two/f01_charlie.c` file
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("\nThis is f01_charlie\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+Add this to the `programs/d02-topic-two/f02_delta.c` file
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("\nThis is f02_delta\n\n");
+    return 0;
+}
+```
+_______________________________________________________________________________
+
+To view a list of `mise tasks`, 
+run this command:
+```bash
+mise tasks
+```
+
+You should see this
+```bash
+Name       Description
+build      👷 Build the project | alias = build
+clean      🧼 Delete build and cache files | alias = clean
+runbin     🤖 Run the binary of the project | alias = run
+structure  🌲 View project structure as a tree diagram | alias = structure
+```
+_______________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Add this to the `CMakeLists.txt` file
 ```cmake
