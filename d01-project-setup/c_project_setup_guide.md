@@ -126,6 +126,30 @@ chmod u+x .mise-tasks/*.bash
 ```
 _______________________________________________________________________________
 
+Add this to the `.clang-format` file
+```yaml
+# ABOUT: .clang-format
+
+# This file is used to configure the settings 
+# for the code formatter `clang-format`.
+
+# Use the link below to search for additional configuration options:
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+#______________________________________________________________________________
+
+# Ensure that tab characters are never used.
+# Any tab characters in the existing file will be replaced with spaces.
+UseTab: Never
+
+# Number of spaces for indentation
+IndentWidth: 4
+
+# Number of characters per line
+ColumnLimit: 80
+```
+_______________________________________________________________________________
+
 Add this to the `src/main.c` file
 ```c
 #include <stdio.h>
@@ -186,8 +210,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # SECTION: Declaring what internal files should be compiled
 
-# Declares that a binary executable should be created from `src/main.cpp`
-add_executable($ENV{BINARY_NAME} src/main.cpp)
+# Declares that a binary executable should be created from `src/main.c`
+add_executable($ENV{BINARY_NAME} src/main.c)
 #______________________________________________________________________________
 ```
 _______________________________________________________________________________
@@ -243,16 +267,13 @@ Add this to the `.mise-tasks/clean.bash` file
 ```bash
 #!/usr/bin/env bash
 
-#MISE description="🧼 Delete the 'build' directory | alias = clean"
+#MISE description="🧼 Delete build and cache files | alias = clean"
 #MISE quiet=true
 
-if [ ! -d build ]; then
-    printf "\n%s\n\n" '✅ No build directory found'
-    exit 0
-fi
-
 rm -rf build
-printf "\n%s\n\n" '✅ The build directory has been deleted'
+rm -rf .cache
+
+printf "\n%s\n\n" '✅ build and cache files have been deleted'
 ```
 _______________________________________________________________________________
 

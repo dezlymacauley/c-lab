@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-#MISE description="🧼 Delete the 'build' directory | alias = clean"
+#MISE description="🧼 Delete build and cache files | alias = clean"
 #MISE quiet=true
 
-if [ ! -d build ]; then
-    printf "\n%s\n\n" '✅ No build directory found'
-    exit 0
-fi
-
 rm -rf build
-printf "\n%s\n\n" '✅ The build directory has been deleted'
+rm -rf .cache
+
+printf "\n%s\n\n" '✅ build and cache files have been deleted'

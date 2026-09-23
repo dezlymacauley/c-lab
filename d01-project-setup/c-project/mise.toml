@@ -42,6 +42,9 @@ clang-format = "latest"
     uvx_args = "--with pygls<2" 
 }
 
+# Displays a tree structure of the project diagram
+eza = "latest"
+
 #______________________________________________________________________________
 
 [env]

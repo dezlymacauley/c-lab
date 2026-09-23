@@ -35,6 +35,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # SECTION: Declaring what internal files should be compiled
 
-# Declares that a binary executable should be created from `src/main.cpp`
-add_executable($ENV{BINARY_NAME} src/main.cpp)
+# Declares that a binary executable should be created from `src/main.c`
+add_executable($ENV{BINARY_NAME} src/main.c)
 #______________________________________________________________________________
