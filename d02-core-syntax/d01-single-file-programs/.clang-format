@@ -1,6 +1,6 @@
 # ABOUT: .clang-format
 
-# This file is used to configure the settings 
+# This file is used to configure the settings
 # for the code formatter `clang-format`.
 
 # Use the link below to search for additional configuration options:
@@ -10,18 +10,43 @@
 
 # This tells clang-format that the file contains C code.
 Language: C
+#______________________________________________________________________________
 
 # Ensure that tab characters are never used.
 # Any tab characters in the existing file will be replaced with spaces.
 UseTab: Never
+#______________________________________________________________________________
 
 # Number of spaces for indentation
 IndentWidth: 4
+#______________________________________________________________________________
 
 # Number of characters per line
 ColumnLimit: 80
+#______________________________________________________________________________
 
 # Places the pointer symbol on the data type, instead of the name.
 # E.g.
 # const char* name;
 PointerAlignment: Left
+#______________________________________________________________________________
+
+# When the contents of brackets don't fit on one line,
+# this will move the contents onto separate indented lines
+# and place the closing bracket on its own line.
+# E.g. 
+#
+# A 2D array like this:
+# double weekly_expenses[3][7] = {{1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7},
+#                                 {8.8, 9.9, 10.1, 11.2, 12.3, 13.4, 14.5},
+#                                 {15.6, 16.7, 17.8, 18.9, 20.0, 21.1, 22.2}};
+#
+# Will be formatted to this:
+# double weekly_expenses[3][7] = {
+#     {1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7},
+#     {8.8, 9.9, 10.1, 11.2, 12.3, 13.4, 14.5},
+#     {15.6, 16.7, 17.8, 18.9, 20.0, 21.1, 22.2}
+# };
+
+AlignAfterOpenBracket: BlockIndent
+#______________________________________________________________________________
