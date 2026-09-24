@@ -40,6 +40,8 @@
 
     This is why the data type of `i` is set to `size_t` to ensure that i
     is large enough the index of the last element in the list.
+
+    It's best practice to use `size_t` for a value that is an index.
     ___________________________________________________________________________
 
     `i <= last_index_to_iterate`
@@ -60,8 +62,8 @@ int main(void) {
     // indexes:             0,  1,  2,  3,  4
     int player_scores[5] = {15, 24, 11, 98, 52};
 
-    int first_index_to_iterate = 0;
-    int last_index_to_iterate = 4;
+    size_t first_index_to_iterate = 0;
+    size_t last_index_to_iterate = 4;
 
     for (size_t i = first_index_to_iterate; i <= last_index_to_iterate; i++) {
         printf("The element at index %zu is %d\n", i, player_scores[i]);
