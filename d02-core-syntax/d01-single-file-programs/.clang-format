@@ -8,6 +8,9 @@
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 #______________________________________________________________________________
 
+# This tells clang-format that the file contains C code.
+Language: C
+
 # Ensure that tab characters are never used.
 # Any tab characters in the existing file will be replaced with spaces.
 UseTab: Never
