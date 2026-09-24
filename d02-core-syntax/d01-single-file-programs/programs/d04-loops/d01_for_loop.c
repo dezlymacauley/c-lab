@@ -6,16 +6,24 @@
 
     ___________________________________________________________________________
 
-    This is syntax that makes the most sense in my opinion:
+    This is syntax:
+
+    size_t first_index_to_iterate = value;
+    size_t last_index_to_iterate = value;
 
     for (size_t i = first_index_to_iterate; i <= last_index_to_iterate; i++) {
         Code that should be run
     }
+    
+    ___________________________________________________________________________
 
     E.g.
 
+    size_t first_index_to_iterate = 0;
+    size_t last_index_to_iterate = 4;
+
     for (size_t i = first_index_to_iterate; i <= last_index_to_iterate; i++) {
-        printf("The element at index %zu is %d\n", i, player_scores[i]);
+        Code that should be run
     }
 
     ___________________________________________________________________________
