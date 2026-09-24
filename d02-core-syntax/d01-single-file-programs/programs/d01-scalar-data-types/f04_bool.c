@@ -4,7 +4,6 @@
     Use this for true and false
 */
 
-
 // This is required for using the macros:
 // bool, true, and false
 #include <stdbool.h>

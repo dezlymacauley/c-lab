@@ -20,3 +20,8 @@ IndentWidth: 4
 
 # Number of characters per line
 ColumnLimit: 80
+
+# Places the pointer symbol on the data type, instead of the name.
+# E.g.
+# const char* name;
+PointerAlignment: Left
