@@ -15,11 +15,11 @@ int main() {
     printf("The first element is %d\n", player_scores[0]);
     printf("The second element is %d\n", player_scores[1]);
     printf("The third element is %d\n", player_scores[2]);
-    printf("The forth element is %d\n", player_scores[3]);
+    printf("The fourth element is %d\n", player_scores[3]);
     printf("\n");
 
     // The first element is 12
     // The second element is 24
     // The third element is 50
-    // The forth element is 16
+    // The fourth element is 16
 }
