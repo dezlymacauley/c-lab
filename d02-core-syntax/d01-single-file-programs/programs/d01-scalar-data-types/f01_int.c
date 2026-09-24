@@ -1,7 +1,7 @@
 /*
     ABOUT: int
 
-    Use this for whole numbers
+    Use this for whole numbers or to express `bool` values
 
 */
 
