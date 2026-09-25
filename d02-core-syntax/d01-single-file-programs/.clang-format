@@ -50,3 +50,18 @@ PointerAlignment: Left
 
 AlignAfterOpenBracket: BlockIndent
 #______________________________________________________________________________
+
+# Keeps short functions on multiple lines, 
+# rather than compressing them into a single line 
+#
+# E.g. A function like this:
+#
+# int main(void) {
+# }
+#
+# Will not be compressed to this:
+# int main(void) {}
+
+AllowShortFunctionsOnASingleLine: false
+
+#______________________________________________________________________________
