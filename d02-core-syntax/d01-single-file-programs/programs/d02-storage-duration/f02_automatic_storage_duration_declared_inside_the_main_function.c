@@ -1,5 +1,5 @@
 /*
-    ABOUT: Automatic Storage Duration (declared in the main function)
+    ABOUT: Automatic Storage Duration (declared inside the main function)
 
     This is a block `{}`
 
@@ -14,26 +14,26 @@
 
 int main(void) {
 
-    int total_users = 10;   // `total_users` is created on this line.
+    int max_health = 10;   // `max_health` is created on this line.
                             // It was created inside the block `{}` of the
                             // function `main`.
 
-                            // The variable `total_users` and its value
+                            // The variable `max_health` and its value
                             // of 10 are both stored on the stack.
 
-    printf("size of total_users in bytes: %zu\n", sizeof(total_users));
-    // size of total_users in bytes: 4
+    printf("size of max_health in bytes: %zu\n", sizeof(max_health));
+    // size of max_health in bytes: 4
 
-    // So when `total_users` was declared, 
-    // the ?? assigned 4 bytes to store the contents of `total_users`.
+    // So when `max_health` was declared, 
+    // the ?? assigned 4 bytes to store the contents of `max_health`.
 
     // 1 byte = 8 bits
     // So 4 bytes = 32 bits
 
     return 0;
-}   // `total_users` is no longer valid at this point.
-    // In this example, `total_users` was declared in the function `main`.
+}   // `max_health` is no longer valid at this point.
+    // In this example, `max_health` was declared in the function `main`.
     // So when this block ends, so does the program.
     // The 4 bytes of memory that were assigned to store the contents of
-    // `total_users` will be automatically released back to the operating
+    // `max_health` will be automatically released back to the operating
     // system.
