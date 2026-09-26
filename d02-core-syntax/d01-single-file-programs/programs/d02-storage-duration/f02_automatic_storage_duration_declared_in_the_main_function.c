@@ -1,5 +1,5 @@
 /*
-    ABOUT: Automatic Storage Duration (created in the main function)
+    ABOUT: Automatic Storage Duration (declared in the main function)
 
     This is a block `{}`
 
