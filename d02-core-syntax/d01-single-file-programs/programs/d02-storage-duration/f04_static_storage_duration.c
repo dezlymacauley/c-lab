@@ -9,6 +9,7 @@
     regardless of the block that the variable was declared in.
 */
 
+#include <stddef.h>
 #include <stdio.h>
 
 void use_fireball_attack(void) {
@@ -16,7 +17,7 @@ void use_fireball_attack(void) {
     // Because this variable was created with the `static` keyword,
     // it will exist before program starts.
     // In other words, it will be created before the `main` function
-    // starts, and befor the `use_fireball_attack` function is called.
+    // starts, and before the `use_fireball_attack` function is called.
 
     // This is a variable that will keep track of how many times the
     // `use_fireball_attack` function has been used for the duration 
@@ -27,12 +28,12 @@ void use_fireball_attack(void) {
     // So this means that this variable can be used to keep track of how
     // many times this function was called, until the program ends.
 
-    static int fireballs_launched = 0;
+    static size_t fireballs_launched = 0;
 
     // This will increase the value of `fireballs_launched` by 1
     fireballs_launched++;
 
-    printf("\n🔥 Fireballs launched: %d\n", fireballs_launched);
+    printf("\n🔥 Fireballs launched: %zu\n", fireballs_launched);
 }
 
 int main(void) {
